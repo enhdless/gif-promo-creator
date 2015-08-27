@@ -1,7 +1,3 @@
-var gif = new GIF({
-    workerScript: 'js/gif.worker.js'
-});
-
 var framesContainer = document.getElementById('framesContainer');
 var previews = document.getElementById('previewsContainer').childNodes;
 
@@ -25,13 +21,29 @@ function init() {
 }
 
 function generateGif() {
+    var gif = new GIF({
+        workerScript: 'js/gif.worker.js'
+    });
     for (var i=0; i<frames.length; i++) {
         gif.addFrame(frames[i].node, {delay: 850});
     }
     gif.on('finished', function(blob) {
-        window.open(URL.createObjectURL(blob));
+        var reader = new FileReader();
+        reader.addEventListener("loadend", function() {
+            uploadGif(reader.result);
+        });
+        reader.readAsDataURL(blob);
     });
     gif.render();
+}
+
+function uploadGif(data) {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function() {
+        window.open(this.response);
+    }
+    xhr.open('POST', 'http://hhsfbla.com/upload-gif.php');
+    xhr.send(data);
 }
 
 function newCanvas() {
