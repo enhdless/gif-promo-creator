@@ -5,6 +5,9 @@ document.getElementById('createBtn').addEventListener('click', generateGif);
 document.getElementById('newFrameBtn').addEventListener('click', addFrame);
 document.getElementById('imageLoader').addEventListener('change', handleImage, false);
 
+document.getElementById('rot-r').addEventListener('click', rotateClockwise);
+document.getElementById('rot-l').addEventListener('click', rotateCounterClockwise);
+
 var activeFrame;
 var frames = [];
 
@@ -15,7 +18,6 @@ overlay.onload = function() {
     init();
 }
 overlay.src = 'img/overlay.png';    
-overlay.src = 'img/logo.png';    
 
 function init() {
     addFrame();
@@ -78,19 +80,44 @@ function addFrame() {
         imgY: 0,
         imgScl: 1.0,
         width: function() {
-            return 600*this.imgScl;
+            return 700*this.imgScl;
         },
         height: function() {
-            return (this.img.height/this.img.width)*600*this.imgScl;
+            return (this.img.height/this.img.width)*700*this.imgScl;
         },
         imgRot: 0,
         draw: function() {
-            this.context.drawImage(this.img, this.imgX, this.imgY, this.width(), this.height());
-            this.context.drawImage(overlay, 300-overlay.width/2, 300-overlay.height/2);
+            this.context.clearRect(0, 0, 600, 600);
+            this.context.save();
+            this.context.translate(300, 300);
+            this.context.rotate(this.imgRot*Math.PI/180);
+            this.context.fillStyle = '#fff';
+            this.context.fillRect(0, 0, 600, 600);
+            this.context.drawImage(this.img, -300+this.imgX, -300+this.imgY, this.width(), this.height());
+            this.context.restore();
+            this.context.drawImage(overlay, 0, 0, 600, 600);
             this.updatePreview();
         },
         updatePreview: function() {
             this.previewNode.childNodes[0].src = this.node.toDataURL('image/png');
+        },
+        move: function(deltaX, deltaY) {
+            if (this.imgRot==0) {
+                this.imgX += deltaX;
+                this.imgY += deltaY;
+            }
+            if (this.imgRot==90 || this.imgRot==-270) {
+                this.imgX += deltaY;
+                this.imgY -= deltaX;
+            }
+            if (this.imgRot==180 || this.imgRot==-180) {
+                this.imgX -= deltaX;
+                this.imgY -= deltaY;
+            }
+            if (this.imgRot==270 || this.imgRot==-90) {
+                this.imgX -= deltaY;
+                this.imgY += deltaX;
+            }
         }
     };
     frames.push(newFrame);
@@ -123,6 +150,7 @@ function handleImage(e) {
     }
     reader.readAsDataURL(e.target.files[0]); 
 }
+
 var mouse = {
     dragStarted: false,
     x: null,
@@ -157,3 +185,16 @@ function getMouseCoords(e) {
     };
 }
 
+function rotate(direction) {
+    activeFrame.imgRot += 90*direction;
+    activeFrame.imgRot %= 360;
+    console.log(activeFrame.imgRot);
+}
+
+function rotateClockwise() {
+    rotate(1);
+}
+
+function rotateCounterClockwise() {
+    rotate(-1);
+}
