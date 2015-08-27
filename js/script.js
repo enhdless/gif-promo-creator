@@ -14,6 +14,7 @@ var overlay = new Image();
 overlay.onload = function() {
     init();
 }
+overlay.src = 'img/overlay.png';    
 overlay.src = 'img/logo.png';    
 
 function init() {
@@ -51,6 +52,9 @@ function newCanvas() {
     newCanvasNode.width = 600;
     newCanvasNode.height = 600;
     newCanvasNode.id = 'frame-' + frames.length;
+    newCanvasNode.addEventListener('mousedown', startDrag);
+    newCanvasNode.addEventListener('mousemove', dragImage);
+    newCanvasNode.addEventListener('mouseup', endDrag);
     return newCanvasNode;
 }
 
@@ -110,7 +114,7 @@ function handleImage(e) {
     var reader = new FileReader();
     reader.onload = function(e) {
         img = new Image();
-        img.onload = function(){
+        img.onload = function() {
             activeFrame.img = this;
             activeFrame.draw();
             activeFrame.updatePreview();
@@ -119,3 +123,37 @@ function handleImage(e) {
     }
     reader.readAsDataURL(e.target.files[0]); 
 }
+var mouse = {
+    dragStarted: false,
+    x: null,
+    y: null
+};
+
+function startDrag(e) {
+    mouse.dragStarted = true;
+    coords = getMouseCoords(e);
+    mouse.x = coords.x;
+    mouse.y = coords.y;
+}
+
+function endDrag(e) {
+    mouse.dragStarted = false;
+}
+
+function dragImage(e) {
+    if (mouse.dragStarted) {     
+        newCoords = getMouseCoords(e);
+        activeFrame.move(newCoords.x-mouse.x, newCoords.y-mouse.y);
+        mouse.x = newCoords.x;
+        mouse.y = newCoords.y;
+    }
+    activeFrame.draw();
+}
+
+function getMouseCoords(e) {
+    return {
+        x: e.clientX,
+        y: e.clientY
+    };
+}
+

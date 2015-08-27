@@ -21,6 +21,7 @@
 #framesContainer canvas {
     padding: 5px;
     border: 1px solid #ccc;
+    cursor: move;
 }
 #previewsContainer {
     width: 612px;
