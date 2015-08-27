@@ -1,0 +1,40 @@
+* {
+    box-sizing: border-box;
+}
+.container {
+    width: 900px;
+    margin: auto;
+}
+.main, .side {
+    display: inline-block;
+    float: left;
+}
+.side {
+    width: 200px;
+    margin-left: 50px;
+}
+#framesContainer {
+    overflow: hidden;
+    width: 612px;
+    height: 612px;
+}
+#framesContainer canvas {
+    padding: 5px;
+    border: 1px solid #ccc;
+}
+#previewsContainer {
+    width: 612px;
+    padding: 5px;
+    border: 1px solid #ccc;
+}
+#previewsContainer a {
+    display: inline-block;
+}
+#previewsContainer img {
+    width: 100px;
+    height: 100px;
+    margin-right: 5px;
+}
+.hidden {
+    display: none;
+}
