@@ -20,12 +20,16 @@
         <h2>Current Frame</h2>
         <input type="file" id="imageLoader" name="imageLoader">
 
+        Size: <input type="range" id="scale" min="0.2" max="2.0" step="0.1">
+        <br>
+        Rotation:
         <button class="btn edit" id="rot-l">&#8630;</button>
         <button class="btn edit" id="rot-r">&#8631;</button>
 
 
-        <h2>Add Frame</h2>
-        <input type="button" id="newFrameBtn" value="Add">
+        <h2>Frames</h2>
+        <input type="button" id="newFrameBtn" value="Add Another">
+        <input type="button" id="delFrameBtn" value="Delete Current">
 
         <h2>Done?</h2>
         <input type="button" id="createBtn" value="Create">

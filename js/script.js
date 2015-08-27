@@ -3,8 +3,10 @@ var previews = document.getElementById('previewsContainer').childNodes;
 
 document.getElementById('createBtn').addEventListener('click', generateGif);
 document.getElementById('newFrameBtn').addEventListener('click', addFrame);
+document.getElementById('delFrameBtn').addEventListener('click', deleteFrame);
 document.getElementById('imageLoader').addEventListener('change', handleImage, false);
 
+document.getElementById('scale').addEventListener('mousemove', scale);
 document.getElementById('rot-r').addEventListener('click', rotateClockwise);
 document.getElementById('rot-l').addEventListener('click', rotateCounterClockwise);
 
@@ -126,6 +128,14 @@ function addFrame() {
     setActiveFrame(frames.length-1);
 }
 
+function deleteFrame() {
+    var i = activeFrame.node.id.split('-')[1];
+    framesContainer.removeChild(activeFrame.node);
+    previewsContainer.removeChild(activeFrame.previewNode);
+    frames.splice(i, 1);
+    setActiveFrame(frames.length-1);
+}
+
 function changeFrame(e) {
     var id = e.target.parentNode.hash.split('-')[1];
     setActiveFrame(id);
@@ -185,10 +195,14 @@ function getMouseCoords(e) {
     };
 }
 
+function scale(e) {
+    activeFrame.imgScl = e.target.value;
+    activeFrame.draw();
+}
+
 function rotate(direction) {
     activeFrame.imgRot += 90*direction;
     activeFrame.imgRot %= 360;
-    console.log(activeFrame.imgRot);
 }
 
 function rotateClockwise() {
