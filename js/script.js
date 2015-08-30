@@ -1,6 +1,8 @@
 var framesContainer = document.getElementById('framesContainer');
 var previews = document.getElementById('previewsContainer').childNodes;
 
+var gifLink = document.getElementById('gifLink');
+
 document.getElementById('createBtn').addEventListener('click', generateGif);
 document.getElementById('newFrameBtn').addEventListener('click', addFrame);
 document.getElementById('delFrameBtn').addEventListener('click', deleteFrame);
@@ -21,6 +23,9 @@ overlay.src = 'img/overlay.png';
 
 function init() {
     addFrame();
+    if (localStorage['gifUrl']) {
+        updateGifLink(localStorage['gifUrl']);
+    }
 }
 
 function generateGif() {
@@ -40,10 +45,17 @@ function generateGif() {
     gif.render();
 }
 
+function updateGifLink(url) {
+    gifLink.href = url;
+    gifLink.innerHTML = url;
+}
+
 function uploadGif(data) {
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {
-        window.open(this.response);
+        url = this.response;
+        localStorage['gifUrl'] = url;
+        updateGifLink(url);
     }
     xhr.open('POST', 'http://hhsfbla.com/upload-gif.php');
     xhr.send(data);
