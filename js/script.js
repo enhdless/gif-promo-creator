@@ -16,9 +16,7 @@ var frames = [];
 var bg = new Image();
 bg.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==';
 var overlay = new Image();
-overlay.onload = function() {
-    init();
-}
+overlay.onload = init;
 overlay.src = 'img/overlay.png';    
 
 function init() {
@@ -142,9 +140,11 @@ function changeFrame(e) {
 }
 
 function setActiveFrame(i) {
+    if (activeFrame) activeFrame.previewNode.classList.remove('current');
     window.location.hash = 'frame-' + i;
     activeFrame = frames[i];
     activeFrame.draw();
+    activeFrame.previewNode.classList.add('current');
 }
 
 function handleImage(e) {
@@ -164,14 +164,23 @@ function handleImage(e) {
 var mouse = {
     dragStarted: false,
     x: null,
-    y: null
+    y: null,
+    getNewCoords: function(e) {
+        return {
+            x: e.clientX,
+            y: e.clientY
+        };
+    },
+    updateCoords: function(x, y) {
+        this.x = x;
+        this.y = y;
+    }
 };
 
 function startDrag(e) {
     mouse.dragStarted = true;
-    coords = getMouseCoords(e);
-    mouse.x = coords.x;
-    mouse.y = coords.y;
+    coords = mouse.getNewCoords(e);
+    mouse.updateCoords(coords.x, coords.y);
 }
 
 function endDrag(e) {
@@ -180,19 +189,11 @@ function endDrag(e) {
 
 function dragImage(e) {
     if (mouse.dragStarted) {     
-        newCoords = getMouseCoords(e);
+        newCoords = mouse.getNewCoords(e);
         activeFrame.move(newCoords.x-mouse.x, newCoords.y-mouse.y);
-        mouse.x = newCoords.x;
-        mouse.y = newCoords.y;
+        mouse.updateCoords(newCoords.x, newCoords.y);
     }
     activeFrame.draw();
-}
-
-function getMouseCoords(e) {
-    return {
-        x: e.clientX,
-        y: e.clientY
-    };
 }
 
 function scale(e) {
@@ -203,6 +204,7 @@ function scale(e) {
 function rotate(direction) {
     activeFrame.imgRot += 90*direction;
     activeFrame.imgRot %= 360;
+    activeFrame.draw();
 }
 
 function rotateClockwise() {

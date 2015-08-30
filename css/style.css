@@ -30,11 +30,15 @@
 }
 #previewsContainer a {
     display: inline-block;
+    line-height: 1;
+    margin-right: 5px;
 }
 #previewsContainer img {
     width: 100px;
     height: 100px;
-    margin-right: 5px;
+}
+#previewsContainer .current img {
+    border: 2px solid #444;   
 }
 .hidden {
     display: none;
