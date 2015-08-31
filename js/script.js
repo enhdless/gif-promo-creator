@@ -103,8 +103,8 @@ function addFrame() {
             this.context.save();
             this.context.translate(300, 300);
             this.context.rotate(this.imgRot*Math.PI/180);
-            this.context.fillStyle = '#fff';
-            this.context.fillRect(0, 0, 600, 600);
+            // this.context.fillStyle = '#fff';
+            // this.context.fillRect(0, 0, 600, 600);
             this.context.drawImage(this.img, -300+this.imgX, -300+this.imgY, this.width(), this.height());
             this.context.restore();
             this.context.drawImage(overlay, 0, 0, 600, 600);
